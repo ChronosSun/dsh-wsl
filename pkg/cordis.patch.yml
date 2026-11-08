@@ -81,5 +81,7 @@
                 name: '@chronosun/dsh-wsl/project'
               - id: tool-bootstrap-wsl
                 name: '@chronosun/dsh-wsl/bootstrap'
+              - id: tool-term-wsl
+                name: '@chronosun/dsh-wsl/terminal'
           - id: tool-jobs
             name: '@deepseek-ai/dsh-tool-jobs'

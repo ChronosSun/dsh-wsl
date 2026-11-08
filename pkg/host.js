@@ -11,6 +11,7 @@ import { installWorkspaceChangesPaths } from './src/changes-paths.mjs'
 import { installWslDiff } from './src/wsl-diff-v2.mjs'
 import { readSettings, userFor, writeSettings } from './src/settings.mjs'
 import { runDoctor, runFix, detectUsers, listWslDistros } from './src/doctor.mjs'
+import { runProjectCheck } from './src/project.mjs'
 
 const BASE = '/dsh-wsl'
 const VERSION = (() => {
@@ -149,6 +150,17 @@ export const apply = (ctx) => {
     ['POST', `${BASE}/doctor/fix`, async (req, res) => {
       const body = await readBody(req)
       send(res, 200, await runFix(body.distro ?? '', body.action ?? '', body.user ?? '', body.name ?? ''))
+    }],
+    ['GET', `${BASE}/doctor/project`, async (req, res) => {
+      const url = new URL(req.url, 'http://localhost')
+      const distro = url.searchParams.get('distro') ?? ''
+      const user = url.searchParams.get('user') ?? userFor(distro)
+      const path = url.searchParams.get('path') ?? ''
+      try {
+        send(res, 200, await runProjectCheck(distro, user, path))
+      } catch (error) {
+        send(res, 400, { error: String(error?.message ?? error) })
+      }
     }],
     ['GET', `${BASE}/changes`, async (req, res) => {
       const url = new URL(req.url, 'http://localhost')

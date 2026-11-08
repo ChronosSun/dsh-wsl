@@ -35,7 +35,7 @@ function base64Script(script) {
   return Buffer.from(script, 'utf8').toString('base64')
 }
 
-async function bashScript(distro, user, script, options) {
+export async function bashScript(distro, user, script, options) {
   const args = ['-d', distro]
   if (user) args.push('-u', user)
   args.push('--', 'bash', '-lc', `printf %s ${base64Script(script)} | base64 -d | bash`)

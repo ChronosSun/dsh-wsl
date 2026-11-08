@@ -1,6 +1,6 @@
 {
   "name": "@chronosun/dsh-wsl",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "type": "module",
   "description": "WSL World for DeepSeek Harness: the whole session runs in a local WSL distribution with Linux paths, clean PATH, native @/search/diffs/worktrees, plus a connection panel and project doctor. Not a wsl_* tool set.",
   "license": "MIT",
@@ -39,6 +39,7 @@
     "./search": "./search-tools.mjs",
     "./prompt": "./prompt.mjs",
     "./terminal-launcher": "./terminal-launcher.mjs",
+    "./terminal": "./terminal-tool.mjs",
     "./worktree": "./worktree-tool-v2.mjs",
     "./path": "./path-tool.mjs",
     "./project": "./project-tool.mjs",
@@ -56,6 +57,7 @@
     "search-tools.mjs",
     "prompt.mjs",
     "terminal-launcher.mjs",
+    "terminal-tool.mjs",
     "worktree-tool-v2.mjs",
     "path-tool.mjs",
     "project-tool.mjs",

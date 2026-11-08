@@ -346,6 +346,36 @@ window.__ModuleLoader__.load({
         check.node?.path && check.keys > 0 && check.sshConfig ? h('span', { style: { fontSize: 11, color: '#15803d' } }, 'SSH ready') : null))))
     }
 
+    /** Read-only project doctor: manifests and tool availability. */
+    function ProjectCard({ path, setPath, project, busy, onCheck, home, distro }) {
+      return h('div', {
+        style: { marginTop: 14, border: `1px solid ${line}`, borderRadius: 8, padding: 12, background: card },
+      },
+      h('h4', { style: { margin: '0 0 8px', fontSize: 13, color: text } }, '项目检查'),
+      h('div', { style: { display: 'flex', gap: 6, flexWrap: 'wrap' } },
+        h('input', {
+          type: 'text',
+          value: path,
+          placeholder: home ? `${home}/project` : '/home/<user>/project',
+          onChange: (event) => setPath(event.target.value),
+          style: { ...input, flex: '1 1 260px', minWidth: 180 },
+        }),
+        h('button', {
+          type: 'button', style: btn, disabled: busy || !distro,
+          onClick: onCheck,
+        }, busy ? '检查中…' : '检查项目')),
+      project ? h('div', { style: { marginTop: 8, fontSize: 12, color: muted, lineHeight: 1.7 } },
+        h('div', { style: { color: text } }, `${project.distro || distro} · ${project.path}`),
+        h('pre', {
+          style: {
+            margin: '6px 0 0', padding: '8px 10px', borderRadius: 6, fontSize: 11, lineHeight: 1.5,
+            background: 'transparent', border: `1px solid ${line}`, color: text, whiteSpace: 'pre-wrap',
+            maxHeight: 240, overflow: 'auto',
+          },
+        }, project.error || project.report || '（没有输出）'))
+        : h('div', { style: { marginTop: 8, fontSize: 11, color: muted } }, '只读：列出 manifest、已找到的工具和缺失项，不安装任何东西。'))
+    }
+
     return {
       inject: ['slots', 'workspaces', 'uiWorkspace'],
       apply(ctx) {
@@ -364,6 +394,9 @@ window.__ModuleLoader__.load({
           const [doctor, setDoctor] = useState(null)
           const [doctorBusy, setDoctorBusy] = useState(false)
           const [doctorMsg, setDoctorMsg] = useState('')
+          const [projectPath, setProjectPath] = useState('')
+          const [project, setProject] = useState(null)
+          const [projectBusy, setProjectBusy] = useState(false)
 
           const refresh = useCallback(async () => {
             try {
@@ -479,6 +512,27 @@ window.__ModuleLoader__.load({
           const selectedWorking = busy.endsWith(':' + selectedName)
           const nodeReady = Boolean(selectedHello?.node)
           const nodeMissing = Boolean(selectedCheck && !selectedCheck.node?.path)
+          const checkProject = async () => {
+            const path = projectPath.trim() || selectedHello?.home || ''
+            if (!path) {
+              setError('请输入 WSL 里的项目绝对路径')
+              return
+            }
+            setProjectBusy(true)
+            try {
+              const query = new URLSearchParams({
+                distro: selectedName,
+                user: selectedHello?.user || '',
+                path,
+              })
+              setProject(await call('/doctor/project?' + query.toString()))
+              setError('')
+            } catch (e) {
+              setError(String(e.message || e))
+            } finally {
+              setProjectBusy(false)
+            }
+          }
 
           const tab = (name) => {
             const active = name === selectedName
@@ -638,7 +692,16 @@ window.__ModuleLoader__.load({
             doctor ? h(DoctorCard, { doctor, busy: doctorBusy, onFix: fix })
               : h('div', {
                 style: { border: `1px solid ${line}`, borderRadius: 8, padding: 18, background: card, color: muted, fontSize: 12, lineHeight: 1.7 },
-              }, '点击“运行诊断”查看每个发行版的 Node、SSH、PATH、网络状态和修复按钮；结果会显示在这里。'))),
+              }, '点击“运行诊断”查看每个发行版的 Node、SSH、PATH、网络状态和修复按钮；结果会显示在这里。'),
+            h(ProjectCard, {
+              path: projectPath,
+              setPath: setProjectPath,
+              project,
+              busy: projectBusy,
+              onCheck: checkProject,
+              home: selectedHello?.home,
+              distro: selectedName,
+            })),
 
           picking ? h(WslFolderDialog, {
             initialDistro: pickerDistro,
@@ -646,7 +709,7 @@ window.__ModuleLoader__.load({
             onCreated: () => refresh(),
             workspaces: ctx.workspaces,
             uiWorkspace: ctx.uiWorkspace,
-          }) : null))
+          }) : null)))
         }
 
         ctx.slots.inject('sidebar.panellist', () => ctx.slots.register({

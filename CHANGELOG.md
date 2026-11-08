@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.7.0
+
+- Add `wsl_term`: a persistent real PTY shell per Agent session
+  (`run`/`read`/`interrupt`/`close`), delegated to the Host PTY through the
+  world's WSL subprocess service.
+- Add the panel project-check card (`/doctor/project`) with a path input and
+  read-only manifest/tool report.
+- Share the project-doctor script between the panel and `wsl_project_check`.
+
 ## 1.6.1
 
 - Add `wsl_bootstrap`: dry-run-first recipes for Node, Python, build tools and

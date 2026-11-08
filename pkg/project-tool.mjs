@@ -6,6 +6,7 @@
 import { registry } from './src/registry.mjs'
 import { linuxPathFromUnc } from './src/preset-default.mjs'
 import { defaultDistro, userFor } from './src/settings.mjs'
+import { projectScript, renderProjectReport } from './src/project.mjs'
 
 export const name = 'dsh-wsl/project'
 export const inject = ['tools']
@@ -16,10 +17,6 @@ function brokerFor(cwd, distro) {
 
 function distroFromUnc(value) {
   return /^\\\\[?]?(?:wsl\.localhost|wsl\$)\\([^\\]+)\\/i.exec(String(value ?? ''))?.[1] ?? ''
-}
-
-function shellQuote(value) {
-  return `'${String(value).replace(/'/g, `'\\''`)}'`
 }
 
 export function apply(ctx) {
@@ -56,21 +53,10 @@ export function apply(ctx) {
       if (!target) throw new Error('wsl_project_check: pass a Linux path; the session is not in a WSL workspace')
       const broker = brokerFor(rawCwd, distro)
       if (!broker) throw new Error(`wsl_project_check: no broker for ${distro || '(default)'}`)
-      const script = [
-        `cd ${shellQuote(target)} || { echo "workspace-missing"; exit 2; }`,
-        'echo "workspace=$PWD"',
-        'for f in package.json package-lock.json pnpm-lock.yaml yarn.lock bun.lockb .nvmrc Cargo.toml go.mod pyproject.toml requirements.txt Dockerfile docker-compose.yml Makefile CMakeLists.txt; do',
-        '  [ -f "$f" ] && echo "manifest=$f"',
-        'done',
-        'for t in node npm pnpm yarn bun cargo go python3 pip3 make cmake docker rg fd git ssh; do',
-        '  p=$(command -v "$t" 2>/dev/null || true)',
-        '  if [ -n "$p" ]; then echo "tool=$t|$p"; else echo "missing=$t"; fi',
-        'done',
-        'printf "%s\\n" "$PATH" | tr ":" "\\n" | grep "^/mnt/" | head -5 | sed "s/^/winpath=/"',
-      ].join('\n')
+      const script = projectScript(target)
       const result = await broker.call('exec', { argv: ['bash', '-lc', script], cwd: target })
       if (result.code !== 0) throw new Error(`wsl_project_check: ${result.err || result.out || `exit ${result.code}`}`)
-      return { path: target, distro, report: result.out.trim() }
+      return { path: target, distro, report: renderProjectReport(result.out) }
     },
   }
 

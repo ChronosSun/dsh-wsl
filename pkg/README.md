@@ -78,6 +78,11 @@ different product.
 - **Dry-run bootstrap.** `wsl_bootstrap` plans (and only with `dryRun: false`
   installs) `node`, `python`, `build` or `tools` recipes as root inside the
   distribution. It never installs silently.
+- **Persistent PTY shell for the Agent.** `wsl_term` keeps one real terminal
+  shell per Agent session: `run` executes in the same shell (`cd`, exported
+  variables and background work persist), `read` returns buffered output,
+  `interrupt` sends SIGINT, and `close` ends it. Raw keystrokes/full-screen TUI
+  input are not exposed yet.
 
 ## Why this instead of opening the UNC path
 

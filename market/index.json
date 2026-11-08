@@ -45,9 +45,9 @@
       },
       "icon": "icon.svg",
       "author": "chronosun",
-      "homepage": "https://github.com/chronosun/dsh-plugin#readme",
+      "homepage": "https://github.com/ChronosSun/dsh-wsl#readme",
       "repository": {
-        "url": "https://github.com/chronosun/dsh-plugin",
+        "url": "https://github.com/ChronosSun/dsh-wsl",
         "directory": "pkg"
       },
       "metadata": {

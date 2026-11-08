@@ -4,14 +4,14 @@
   "type": "module",
   "description": "WSL execution world for DeepSeek Harness: a Linux bash/terminal/fs world inside a local WSL distribution, plus a connection panel, Doctor, and a WSL workspace picker.",
   "license": "MIT",
-  "homepage": "https://github.com/chronosun/dsh-plugin#readme",
+  "homepage": "https://github.com/ChronosSun/dsh-wsl#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chronosun/dsh-plugin.git",
+    "url": "git+https://github.com/ChronosSun/dsh-wsl.git",
     "directory": "pkg"
   },
   "bugs": {
-    "url": "https://github.com/chronosun/dsh-plugin/issues"
+    "url": "https://github.com/ChronosSun/dsh-wsl/issues"
   },
   "publishConfig": {
     "access": "public"

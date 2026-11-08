@@ -5,7 +5,7 @@ filesystem tools, terminal, search and `@` references inside a local WSL
 distribution — Linux paths, Linux tools, no Windows/9P indirection.
 
 - npm: `@chronosun/dsh-wsl`
-- plugin-market index: `https://chronosun.github.io/dsh-plugin/index.json`
+- plugin-market index: `https://chronossun.github.io/dsh-wsl/index.json`
 - package source: [`pkg/`](pkg/)
 - market index source: [`market/`](market/)
 
@@ -29,7 +29,7 @@ DSH currently has no official central index. Host `market/` on GitHub Pages
 indexes** and add:
 
 ```text
-https://chronosun.github.io/dsh-plugin/index.json
+https://chronossun.github.io/dsh-wsl/index.json
 ```
 
 ## Development

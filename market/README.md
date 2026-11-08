@@ -9,15 +9,15 @@ central index yet, so users add this URL in **Plugins → Discover → Add index
 The recommended host is GitHub Pages for the repository:
 
 ```text
-https://github.com/chronosun/dsh-plugin
+https://github.com/ChronosSun/dsh-wsl
 ```
 
 With Pages set to **GitHub Actions**, the workflow in
 `.github/workflows/pages.yml` publishes this directory, giving:
 
 ```text
-https://chronosun.github.io/dsh-plugin/index.json
-https://chronosun.github.io/dsh-plugin/icon.svg
+https://chronossun.github.io/dsh-wsl/index.json
+https://chronossun.github.io/dsh-wsl/icon.svg
 ```
 
 Any HTTPS static host works; `index.json` and `icon.svg` must stay together.
@@ -50,7 +50,7 @@ Then push `market/` to `main`; the Pages workflow redeploys.
 Package metadata in `pkg/package.json` points at:
 
 ```text
-https://github.com/chronosun/dsh-plugin
+https://github.com/ChronosSun/dsh-wsl
 ```
 
 If your GitHub account/repository is different, update both
@@ -63,8 +63,8 @@ cd C:\Users\Yunson\dsh-wsl-plugin
 git init
 git add .
 git commit -m "dsh-wsl: WSL execution world for DSH"
-gh repo create chronosun/dsh-plugin --public --source . --remote origin --push
-gh repo edit chronosun/dsh-plugin `
+gh repo create ChronosSun/dsh-wsl --public --source . --remote origin --push
+gh repo edit ChronosSun/dsh-wsl `
   --add-topic dsh-plugin `
   --add-topic dsh `
   --add-topic wsl `

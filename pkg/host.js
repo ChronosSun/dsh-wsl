@@ -5,7 +5,8 @@
 import { spawn } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { registry } from './src/registry.mjs'
-import { installModelCwdTranslation, installSessionPresetDefault, WSL_PRESET } from './src/preset-default.mjs'
+import { installModelCwdTranslation, installSessionPresetDefault, WSL_STANDARD_PRESET } from './src/preset-default.mjs'
+import { installPresetRosterFilter } from './src/preset-roster.mjs'
 import { installWslFileReferences } from './src/file-references.mjs'
 import { installWorkspaceChangesPaths } from './src/changes-paths.mjs'
 import { installWslDiff } from './src/wsl-diff-v2.mjs'
@@ -89,6 +90,9 @@ export const apply = (ctx) => {
   // preset; without this patch those sessions run on Windows. Installed before
   // the routes so `/state` can report whether the seam is live.
   const presetDefault = installSessionPresetDefault(ctx)
+  // WSL is a workspace world, not a mode card: keep the internal variants out
+  // of the Agent-preset roster while leaving Standard/Creator visible.
+  const presetRoster = installPresetRosterFilter(ctx)
   // Keep the durable UNC cwd for Host features, but show the model the Linux
   // directory its tools actually use. No-op for non-WSL sessions.
   const modelCwd = installModelCwdTranslation(ctx)
@@ -126,7 +130,7 @@ export const apply = (ctx) => {
       brokers: registry.list(),
       settings: readSettings(),
       capabilities: capabilities(),
-      presetDefault: { installed: presetDefault.installed, preset: WSL_PRESET },
+      presetDefault: { installed: presetDefault.installed, preset: WSL_STANDARD_PRESET },
       modelCwd: { installed: modelCwd.installed },
       fileReferences: { installed: fileReferences.installed },
       changesPaths: { installed: changesPaths.installed },
@@ -264,6 +268,7 @@ export const apply = (ctx) => {
 
   return () => {
     presetDefault.dispose()
+  presetRoster.dispose()
     modelCwd.dispose()
     fileReferences.dispose()
     changesPaths.dispose()

@@ -35,29 +35,29 @@ different product.
   distribution, browse its directories, and adopt one as a workspace. The
   workspace is registered through the official API, so history, diffs and the
   session list keep working; its title is prefixed with `🐧`.
-- **WSL by default inside a WSL workspace.** Opening a `🐧` workspace or
-  pressing **New Session** there creates the session under the `WSL` preset
-  without asking. The Host rewrites the preset only when the Client names none,
-  and only for `\\wsl.localhost\...` / `\\wsl$\...` paths, so Windows
-  workspaces and explicit preset choices keep their behavior. An existing
-  session keeps the preset recorded when it was created; resuming it never
-  switches modes. This works for existing workspaces too — no re-creation is
-  needed.
-- **A `WSL` agent preset.** Sessions created in that workspace run their tools
-  in Linux. A broker keeps one persistent connection per (distribution, user)
-  and disconnects it after **5 idle days** by default (configurable in the
-  panel, `0` = never).
+- **WSL is a workspace world, not a separate Agent mode.** The Agent-preset
+  roster still shows **Standard** and **Creator**. A session created in a
+  `🐧` WSL workspace maps internally to a hidden `wsl-standard` or
+  `wsl-cordis` variant, keeping that mode's tools while replacing the execution
+  world with WSL. The WSL cards themselves are filtered from the roster, so
+  there is no third "WSL mode" to choose.
+- **Global model and permissions stay global.** The variants do not declare or
+  modify model intelligence, permission policy, or default settings; those
+  continue to come from the profile's global configuration.
+- **Persistent broker.** One broker keeps the connection per (distribution,
+  user) and disconnects it after **5 idle days** by default (configurable in
+  the panel, `0` = never).
 - **A clean environment.** `wsl.exe` normally hands Linux a PATH polluted with
   `/mnt/c`, `/mnt/d` entries, so `node`, `npm`, `git` and `rg` can silently
   resolve to Windows binaries. Every command here runs with the distribution's
   **login PATH minus every `/mnt/*` entry**, so the user's own toolchain
   (`~/.local/bin`, cargo, nvm, `/usr/local/bin`, …) stays reachable and an
   interop binary is never used.
-- **WSL-native `@` discovery.** For a WSL-preset Agent, `@file` candidates are
+- **WSL-native `@` discovery.** For a WSL-world Agent, `@file` candidates are
   indexed inside the distribution (bounded tree, `.gitignore`-aware) and
   returned relative to the Linux cwd, not scanned through the UNC share. The
   Host provider remains for every other preset.
-- **Linux diff summaries and comparisons.** For a WSL-preset Session the plugin
+- **Linux diff summaries and comparisons.** For a WSL-world Session the plugin
   snapshots the work tree inside the distribution at turn start/end (private
   `GIT_INDEX_FILE`, `write-tree`/`diff-tree`) and serves the changed-files card
   from Linux git. The Host recorder remains the event source and fallback; the
@@ -67,7 +67,7 @@ different product.
   Git worktree with Linux git and returns its path, branch and base commit.
   The Session working directory is unchanged, so pass the returned path (or
   `workdir`) to later tools; the shipped Host `create_worktree` tool is not
-  mounted in the WSL preset.
+  mounted in the WSL variants.
 - **Path conversion for the boundary.** `wsl_path` converts a Linux path to
   `/mnt/<drive>` / `\\wsl.localhost\<distro>\...` and back. It is read-only and
   useful when an interop executable needs the Windows form.
@@ -90,7 +90,7 @@ Opening `\\wsl.localhost\...` as a Workspace only changes the folder: on Windows
 the standard preset still runs `pwsh`, reads and writes through the 9P share,
 and spawns the Windows `rg`. This bundle changes the **execution world**:
 
-| | UNC workspace | WSL preset |
+| | UNC workspace | WSL workspace |
 |---|---|---|
 | shell | Windows `pwsh` | Linux `bash`, clean login PATH |
 | file I/O | 9P share | persistent broker → ext4 |
@@ -104,9 +104,10 @@ Measured on a local machine (1000 `stat`, 20 `readdir`): 9P 1.31 ms vs broker
 persistent broker while `bash` keeps DSH's one-shot contract (`workdir`, not a
 persistent `cd`).
 
-It is deliberately not a host-preset rewrite and not a `wsl_*` tool set: the
-world is declared as its own preset, so the model never chooses between Windows
-and Linux tools, and upgrades do not depend on the text of a shipped preset.
+It is deliberately not a host-preset rewrite and not a `wsl_*` tool set. The
+world is delivered as hidden WSL variants of the visible Standard/Creator
+modes, so the model never chooses between Windows and Linux tools and no extra
+WSL mode card appears.
 
 ## Compared with `wsl_*` tool plugins
 
@@ -118,7 +119,7 @@ and Linux tools, and upgrades do not depend on the text of a shipped preset.
 | PATH | Windows PATH can leak in; doctor detects it | login PATH minus `/mnt/*` |
 | Per-command cost | fresh `wsl.exe` each call | persistent broker |
 | Terminal | agent-driven `wsl-term` | user sidebar terminal |
-| Setup | one command, any preset | WSL workspace + preset |
+| Setup | one command, any preset | WSL workspace (mode inherited) |
 
 The two are complementary in spirit but not usually installed together: if you
 already run a Windows session and only need occasional WSL commands, the tool
@@ -159,8 +160,10 @@ used only to run a small helper. Nothing is installed into the distribution.
 
 1. Sidebar → `WSL` → `＋ 添加 WSL 工作区`.
 2. Choose a distribution, browse to a directory, press `使用此目录`.
-3. The workspace opens with the `WSL` preset; every later **New Session**
-   inside that workspace also defaults to `WSL`. In a WSL session the Agent's
+3. The workspace opens in the WSL execution world. There is no separate
+   `WSL` mode card: a new session maps to the hidden WSL variant of the current
+   global Agent mode (Standard or Creator), so its tools and the global
+   model/permission settings are inherited. In a WSL session the Agent's
    `Current working directory` is the Linux path (the Host still keeps the UNC
    path for its own diff/`@` features). Ask the agent to run
    `pwd; uname -s; echo $PATH` and it should answer `/home/..., Linux` and a
@@ -176,7 +179,7 @@ used only to run a small helper. Nothing is installed into the distribution.
   collected once (`watch: false`) instead of being invalidated live.
 - The Host keeps the durable session cwd as the UNC path, because host
   features (diff view, `@` references, open-in-app) resolve it through the
-  Windows filesystem. WSL-preset sessions present the **Linux** equivalent as
+  Windows filesystem. WSL-world sessions present the **Linux** equivalent as
   `Current working directory` to the Agent, so every model-visible path is
   Linux; every tool still accepts either form.
 - A WSL snapshot companion serves the changed-files summary/comparison for WSL
@@ -230,7 +233,7 @@ in `~/.dsh/remote-wsl-settings.json`. The user is normally derived from the
 workspace path (`/home/<user>/...` or `/root`), so the panel does not ask again
 when you add a workspace; the doctor reports the users it finds and a root
 distro is automatically moved to its first normal user when settings are empty.
-The terminal, WSL preset and `@` index all use that user, so a Session and its
+The terminal, WSL variants and `@` index all use that user, so a Session and its
 terminal run as the same non-root identity.
 
 The panel and plugin icon are a penguin outline (white body, current-color
@@ -275,7 +278,7 @@ The Host seam is narrow: `sessionController.create`, `workingDirectory.contextTe
 `fileReferences.list`, `workspaceChanges.summary/diff`, plus the web server.
 Each patch checks the service/method and degrades independently; `/dsh-wsl/state`
 reports `capabilities` so a missing seam is visible instead of taking the whole
-plugin down. The WSL preset itself uses only published Cordis services.
+plugin down. The WSL variants themselves use only published Cordis services.
 
 ## Verifying a live install
 

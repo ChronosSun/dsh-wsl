@@ -19,6 +19,13 @@
 // every session creation fail.
 
 export const WSL_PRESET = 'wsl'
+export const WSL_STANDARD_PRESET = 'wsl-standard'
+export const WSL_CORDIS_PRESET = 'wsl-cordis'
+export const WSL_PRESETS = new Set([WSL_PRESET, WSL_STANDARD_PRESET, WSL_CORDIS_PRESET])
+
+export function isWslPreset(id) {
+  return WSL_PRESETS.has(id)
+}
 
 const ORIGINAL = Symbol.for('cordis.original')
 const PATCHED = Symbol.for('dsh-wsl/preset-default')
@@ -60,19 +67,37 @@ export function workspacePathOf(workspaceRegistry, workspaceId) {
   }
 }
 
+/** The base mode whose tools should be kept for a WSL workspace. */
+function basePresetId(ctx, request) {
+  if (typeof request.agentPreset === 'string' && request.agentPreset !== '') return request.agentPreset
+  try {
+    const service = unwrap(ctx.get('agentPresets'))
+    return service?.config?.selectedDefault || service?.config?.default || 'standard'
+  } catch {
+    return 'standard'
+  }
+}
+
 /** The preset a create request should use, or undefined to leave it to the Host. */
 export function presetForRequest(ctx, request) {
   if (!request || typeof request !== 'object') return undefined
-  if (request.agentPreset !== undefined) return undefined
   const cwd = typeof request.cwd === 'string' ? request.cwd : ''
-  if (cwd !== '') return isWslPath(cwd) ? WSL_PRESET : undefined
-  let registry
-  try {
-    registry = ctx.get('workspaceRegistry')
-  } catch {
-    return undefined
+  let wsl = cwd !== '' ? isWslPath(cwd) : false
+  if (cwd === '') {
+    try {
+      const registry = ctx.get('workspaceRegistry')
+      wsl = isWslPath(workspacePathOf(registry, request.workspaceId))
+    } catch {
+      return undefined
+    }
   }
-  return isWslPath(workspacePathOf(registry, request.workspaceId)) ? WSL_PRESET : undefined
+  if (!wsl) return undefined
+
+  const base = basePresetId(ctx, request)
+  if (base === WSL_CORDIS_PRESET || base === 'cordis') return WSL_CORDIS_PRESET
+  if (base === WSL_STANDARD_PRESET || base === 'standard' || base === WSL_PRESET) return WSL_STANDARD_PRESET
+  if (base === 'minimal' || base === 'ptc') return WSL_STANDARD_PRESET
+  return WSL_STANDARD_PRESET
 }
 
 function unwrap(value) {
@@ -95,13 +120,13 @@ function unwrap(value) {
 export function installSessionPresetDefault(ctx) {
   const disposers = []
   let installed = false
-  let wslPresetReady = false
-  let checking = null
+  const ready = new Set()
+  const checking = new Map()
 
-  async function presetAvailable() {
-    if (wslPresetReady) return true
-    if (checking === null) {
-      checking = (async () => {
+  async function presetAvailable(id) {
+    if (ready.has(id)) return true
+    if (!checking.has(id)) {
+      checking.set(id, (async () => {
         let presets
         try {
           presets = ctx.get('agentPresets')
@@ -110,17 +135,15 @@ export function installSessionPresetDefault(ctx) {
         }
         if (typeof presets?.resolve !== 'function') return false
         try {
-          await presets.resolve(WSL_PRESET)
+          await presets.resolve(id)
           return true
         } catch {
           return false
         }
-      })().finally(() => { checking = null })
+      })().finally(() => { checking.delete(id) }))
     }
-    const ok = await checking
-    // A failed probe may mean the preset row is still mounting, so only the
-    // positive answer is cached for the life of the process.
-    if (ok) wslPresetReady = true
+    const ok = await checking.get(id)
+    if (ok) ready.add(id)
     return ok
   }
 
@@ -135,10 +158,13 @@ export function installSessionPresetDefault(ctx) {
 
     const original = raw.create
     const patched = async function create(request) {
-      const preset = presetForRequest(ctx, request)
-      const next = preset === undefined || !(await presetAvailable())
-        ? request
-        : { ...request, agentPreset: preset }
+      let preset = presetForRequest(ctx, request)
+      if (preset !== undefined && !(await presetAvailable(preset))) {
+        // A legacy install may not have the new variants; the old `wsl`
+        // preset remains the compatibility fallback.
+        preset = (await presetAvailable(WSL_PRESET)) ? WSL_PRESET : undefined
+      }
+      const next = preset === undefined ? request : { ...request, agentPreset: preset }
       return original.call(raw, next)
     }
 
@@ -226,7 +252,7 @@ export function installModelCwdTranslation(ctx) {
     const patched = function contextText(session) {
       const text = original.call(raw, session)
       try {
-        if (presetOf(session) !== WSL_PRESET) return text
+        if (!isWslPreset(presetOf(session))) return text
         const linux = linuxPathFromUnc(raw.get(session))
         if (linux === undefined) return text
         return `Current working directory: ${JSON.stringify(linux)}.`

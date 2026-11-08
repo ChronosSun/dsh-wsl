@@ -150,9 +150,9 @@ window.__ModuleLoader__.load({
           try { if (workspaceId) await workspaces.rename(workspaceId, `🐧 ${folder}`) } catch {}
           onCreated?.({ distro, path: view.path, unc, workspaceId })
           if (workspaceId && uiWorkspace?.connectWorkspace) {
-            await uiWorkspace.connectWorkspace(workspaceId, { agentPreset: 'wsl' })
+            await uiWorkspace.connectWorkspace(workspaceId)
           } else if (workspaceId && uiWorkspace?.startSession) {
-            uiWorkspace.startSession(workspaceId, { agentPreset: 'wsl' })
+            uiWorkspace.startSession(workspaceId)
           }
           onClose()
         } catch (e) {

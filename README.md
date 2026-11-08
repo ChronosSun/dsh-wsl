@@ -21,7 +21,7 @@ tools, no Windows/9P indirection.
 - your project lives in WSL and you want ext4 instead of `/mnt/c`;
 - you want one session to stay in Linux, not one `wsl.exe` per command;
 - you want native Linux `@`, search, diffs and worktrees;
-- you are fine with a one-time WSL workspace/preset setup.
+- you are fine with a one-time WSL workspace setup.
 
 If you only need occasional Linux commands from a Windows session, a
 `wsl_*` tool plugin is the lower-friction choice. See

@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.8.0
+
+- Make WSL a workspace execution world instead of a separate user-visible mode.
+  Standard/Creator remain the visible Agent presets; WSL workspaces map
+  internally to hidden `wsl-standard` / `wsl-cordis` variants that keep the
+  selected mode's tool set and the global model/permission settings.
+- Hide the internal variants (and the legacy `wsl` preset) from the Agent-preset
+  roster; the workspace picker no longer forces an explicit WSL preset.
+- Copy the mode tool groups (schedule, plan, compaction, delegation, plugin
+  manager/market and creator `tool-cordis`) into the variants.
+
 ## 1.7.4
 
 - Fix `glob`/`grep` file enumeration to prune `node_modules` even when the

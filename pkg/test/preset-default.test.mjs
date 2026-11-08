@@ -8,6 +8,8 @@ import {
   presetForRequest,
   workspacePathOf,
   WSL_PRESET,
+  WSL_STANDARD_PRESET,
+  WSL_CORDIS_PRESET,
 } from '../src/preset-default.mjs'
 
 let failed = 0
@@ -46,10 +48,11 @@ const registry = {
   })[id],
 }
 const fakeCtx = { get: (name) => (name === 'workspaceRegistry' ? registry : undefined) }
-check('WSL workspace', presetForRequest(fakeCtx, { workspaceId: 'wsl' }), WSL_PRESET)
+check('WSL workspace', presetForRequest(fakeCtx, { workspaceId: 'wsl' }), WSL_STANDARD_PRESET)
 check('Windows workspace', presetForRequest(fakeCtx, { workspaceId: 'win' }), undefined)
-check('explicit preset wins', presetForRequest(fakeCtx, { workspaceId: 'wsl', agentPreset: 'standard' }), undefined)
-check('UNC cwd without workspace', presetForRequest(fakeCtx, { cwd: '\\\\wsl.localhost\\Ubuntu-24.04\\srv\\app' }), WSL_PRESET)
+check('explicit standard maps to WSL standard', presetForRequest(fakeCtx, { workspaceId: 'wsl', agentPreset: 'standard' }), WSL_STANDARD_PRESET)
+check('explicit creator maps to WSL creator', presetForRequest(fakeCtx, { workspaceId: 'wsl', agentPreset: 'cordis' }), WSL_CORDIS_PRESET)
+check('UNC cwd without workspace', presetForRequest(fakeCtx, { cwd: '\\\\wsl.localhost\\Ubuntu-24.04\\srv\\app' }), WSL_STANDARD_PRESET)
 check('no location', presetForRequest(fakeCtx, {}), undefined)
 check('unknown workspace', workspacePathOf(registry, 'nope'), '')
 
@@ -98,10 +101,10 @@ function makeHost({ controller, presetFails = false } = {}) {
   await controller.create({ workspaceId: 'wsl', agentPreset: 'standard' })
   await controller.create({ cwd: '\\\\wsl$\\Ubuntu-24.04\\srv' })
 
-  check('WSL request gains the preset', controller.requests[0].agentPreset, WSL_PRESET)
+  check('WSL request gains the variant', controller.requests[0].agentPreset, WSL_STANDARD_PRESET)
   check('Windows request stays default', controller.requests[1].agentPreset, undefined)
-  check('explicit preset is preserved', controller.requests[2].agentPreset, 'standard')
-  check('UNC cwd gains the preset', controller.requests[3].agentPreset, WSL_PRESET)
+  check('explicit standard is mapped', controller.requests[2].agentPreset, WSL_STANDARD_PRESET)
+  check('UNC cwd gains the variant', controller.requests[3].agentPreset, WSL_STANDARD_PRESET)
 
   patch.dispose()
   await controller.create({ workspaceId: 'wsl' })
@@ -116,7 +119,7 @@ function makeHost({ controller, presetFails = false } = {}) {
   const late = new FakeController()
   listeners['internal/service']('sessionController', traceable(late))
   await late.create({ workspaceId: 'wsl' })
-  check('late service is patched', late.requests[0].agentPreset, WSL_PRESET)
+  check('late service is patched', late.requests[0].agentPreset, WSL_STANDARD_PRESET)
   check('late install flips installed', patch.installed, true)
   patch.dispose()
 }
@@ -142,7 +145,7 @@ class FakeWorkingDirectory {
     'session-ptc': '\\\\wsl.localhost\\Ubuntu-24.04\\home\\chronos\\develop',
     'session-linux': '/home/chronos/develop',
   })
-  const presets = { presetForSession: (session) => session === 'session-ptc' ? 'ptc' : 'wsl' }
+  const presets = { presetForSession: (session) => session === 'session-ptc' ? 'ptc' : session === 'session-linux' ? WSL_CORDIS_PRESET : WSL_PRESET }
   const ctx = {
     get: (name) => name === 'workingDirectory' ? wd : name === 'agentPresets' ? presets : undefined,
     on: () => {},

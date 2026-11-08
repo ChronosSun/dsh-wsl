@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.6.0
+
+- Add `wsl_path`: read-only Linux ↔ Windows path conversion, including
+  `\\wsl.localhost\<distro>\...` and `/mnt/<drive>`.
+- Add `wsl_project_check`: read-only project doctor for package/lock/build
+  manifests and the Linux tools they require.
+- Merge the duplicated `engines` block so both Node and DSH constraints are
+  declared, and widen the DSH range to `>=0.2.2-rc.1`.
+- Update the market entry to `WSL World`, with the “world, not a tool set”
+  positioning and the new tool documentation.
+
 ## 1.5.3
 
 - Panel readiness card: Linux Node state with a direct **安装 Node** action and

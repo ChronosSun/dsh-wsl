@@ -1,8 +1,8 @@
 {
   "name": "@chronosun/dsh-wsl",
-  "version": "1.5.3",
+  "version": "1.6.0",
   "type": "module",
-  "description": "WSL execution world for DeepSeek Harness: a Linux bash/terminal/fs world inside a local WSL distribution, plus a connection panel, Doctor, and a WSL workspace picker.",
+  "description": "WSL World for DeepSeek Harness: the whole session runs in a local WSL distribution with Linux paths, clean PATH, native @/search/diffs/worktrees, plus a connection panel and project doctor. Not a wsl_* tool set.",
   "license": "MIT",
   "homepage": "https://github.com/ChronosSun/dsh-wsl#readme",
   "repository": {
@@ -22,13 +22,14 @@
     "deepseek-harness",
     "wsl",
     "wsl2",
+    "wsl-world",
+    "wsl-preset",
+    "native-linux",
+    "no-mnt",
     "linux",
     "agent",
     "coding-agent"
   ],
-  "engines": {
-    "node": ">=22"
-  },
   "main": "index.js",
   "exports": {
     ".": "./index.js",
@@ -39,6 +40,8 @@
     "./prompt": "./prompt.mjs",
     "./terminal-launcher": "./terminal-launcher.mjs",
     "./worktree": "./worktree-tool-v2.mjs",
+    "./path": "./path-tool.mjs",
+    "./project": "./project-tool.mjs",
     "./client": "./client.js",
     "./icon": "./icon.svg",
     "./locale/*.json": "./locale/*.json",
@@ -53,6 +56,8 @@
     "prompt.mjs",
     "terminal-launcher.mjs",
     "worktree-tool-v2.mjs",
+    "path-tool.mjs",
+    "project-tool.mjs",
     "client.js",
     "README.md",
     "LICENSE",
@@ -80,6 +85,7 @@
     }
   },
   "engines": {
+    "node": ">=22",
     "dsh": ">=0.2.2-rc.1"
   },
   "peerDependencies": {

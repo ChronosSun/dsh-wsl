@@ -67,6 +67,13 @@ different product.
   The Session working directory is unchanged, so pass the returned path (or
   `workdir`) to later tools; the shipped Host `create_worktree` tool is not
   mounted in the WSL preset.
+- **Path conversion for the boundary.** `wsl_path` converts a Linux path to
+  `/mnt/<drive>` / `\\wsl.localhost\<distro>\...` and back. It is read-only and
+  useful when an interop executable needs the Windows form.
+- **Read-only project doctor.** `wsl_project_check` inspects a directory for
+  `package.json`, lockfiles, `.nvmrc`, `Cargo.toml`, `go.mod`, `pyproject.toml`,
+  `requirements.txt`, `Dockerfile`, `Makefile` and `CMakeLists.txt`, then lists
+  the tools they need and what is missing in the distribution.
 
 ## Why this instead of opening the UNC path
 

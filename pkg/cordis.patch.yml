@@ -75,5 +75,9 @@
                 name: '@deepseek-ai/dsh-tool-goal'
               - id: tool-worktree-wsl
                 name: '@chronosun/dsh-wsl/worktree'
+              - id: tool-path-wsl
+                name: '@chronosun/dsh-wsl/path'
+              - id: tool-project-wsl
+                name: '@chronosun/dsh-wsl/project'
           - id: tool-jobs
             name: '@deepseek-ai/dsh-tool-jobs'

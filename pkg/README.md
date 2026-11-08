@@ -143,6 +143,15 @@ dsh plugin --profile desktop add dist\chronosun-dsh-wsl-<version>.tgz
 Then **quit DSH from the tray and reopen it** — client plugins and preset rows
 load at boot; a page refresh is not enough.
 
+> Run the `dsh plugin` command from a **Windows directory** (`C:\Users\...`),
+> not from a `\\wsl.localhost\...` current directory: the CLI is a Windows
+> `cmd` launcher and cannot start from a UNC path.
+
+If you are migrating from `dsh-remote-wsl`, remove its old `terminal-controller`
+patch or update its `terminal-launcher.mjs` path to
+`...\node_modules\@chronosun\dsh-wsl\terminal-launcher.mjs`; the old package
+directory no longer exists after the dependency change.
+
 Requires: Windows, WSL 2, and a Linux `node` (v18+) inside the distribution,
 used only to run a small helper. Nothing is installed into the distribution.
 

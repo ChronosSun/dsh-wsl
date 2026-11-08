@@ -1,5 +1,5 @@
 window.__ModuleLoader__.load({
-  id: 'dsh-wsl',
+  id: '@chronosun/dsh-wsl',
   factory(require) {
     const React = require('react')
     const h = React.createElement

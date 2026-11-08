@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.7.2
+
+- Fix the client bundle registration id: it must be the package name
+  `@chronosun/dsh-wsl`, not `dsh-wsl`. The mismatch made DSH report
+  “loaded without registering” and produced duplicate-factory errors after the
+  scoped package rename.
+
 ## 1.7.1
 
 - Fix `wsl_term`'s output schema (use a single number type for `exitCode`) so

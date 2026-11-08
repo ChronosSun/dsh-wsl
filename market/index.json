@@ -36,12 +36,12 @@
     {
       "name": "@chronosun/dsh-wsl",
       "title": {
-        "en": "WSL",
-        "zh": "WSL"
+        "en": "WSL World",
+        "zh": "WSL 原生执行环境"
       },
       "description": {
-        "en": "Run a DeepSeek Harness session inside a local WSL distribution: Linux tools and paths, a clean login PATH, WSL-native search and @ references, diagnostics, and a WSL workspace picker.",
-        "zh": "让 DeepSeek Harness 会话在本地 WSL 发行版里运行：Linux 工具与路径、干净的登录 PATH、WSL 原生搜索与 @ 引用、诊断面板，以及 WSL 工作区选择器。"
+        "en": "A complete WSL execution world for DeepSeek Harness — not a wsl_* tool set. The whole session runs in Linux: native cwd, clean PATH, @ references, search, diffs, worktrees and a connection/doctor panel.",
+        "zh": "把整个 DeepSeek Harness 会话放进 WSL 的完整执行环境，而不是一组 wsl_* 工具：Linux cwd、干净 PATH、原生 @ 引用、搜索、diff、worktree，以及连接/诊断面板。"
       },
       "icon": "icon.svg",
       "author": "chronosun",
@@ -55,6 +55,10 @@
         "keywords": [
           "wsl",
           "wsl2",
+          "wsl-world",
+          "wsl-preset",
+          "native-linux",
+          "no-mnt",
           "linux",
           "dsh-plugin",
           "deepseek-harness"

@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.5.3
+
+- Panel readiness card: Linux Node state with a direct **安装 Node** action and
+  an explicit **检查环境** button; no automatic doctor run.
+- Doctor reports kernel, init system, cgroup, docker, GPU and Windows mounts.
+- Reposition the market entry as **WSL World** (not a `wsl_*` tool set), with
+  comparison, security and submission documentation.
+
 ## 1.5.2
 
 - Add GitHub `repository`/`homepage`/`bugs` metadata; publish this version after

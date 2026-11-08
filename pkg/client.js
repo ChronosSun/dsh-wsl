@@ -332,7 +332,8 @@ window.__ModuleLoader__.load({
         h('span', { style: { fontSize: 12, color: check.node?.path ? muted : '#b91c1c' } }, check.node?.version ? `node ${check.node.version}` : 'node 缺失'),
         h('span', { style: { fontSize: 12, color: muted } }, check.git?.version ? 'git ok' : 'git 缺失'),
         h('span', { style: { fontSize: 12, color: muted } }, `SSH keys ${check.keys ?? 0}`),
-        h('span', { style: { fontSize: 12, color: check.path?.mntEntries > 0 ? '#b45309' : muted } }, `PATH /mnt ${check.path?.loginMntEntries ?? 0} → ${check.path?.mntEntries ?? 0}`)),
+        h('span', { style: { fontSize: 12, color: check.path?.mntEntries > 0 ? '#b45309' : muted } }, `PATH /mnt ${check.path?.loginMntEntries ?? 0} → ${check.path?.mntEntries ?? 0}`),
+        check.env?.kernel ? h('span', { style: { fontSize: 12, color: muted } }, `${check.env.kernel} · ${check.env.init || 'init?'} · docker ${check.env.docker ? '✓' : '—'} · GPU ${check.env.gpu ? '✓' : '—'}`) : null),
       check.root ? h('div', { style: { marginTop: 4, fontSize: 11, color: '#b45309' } }, '⚠ 当前以 root 运行；建议在下方设置里给该发行版指定普通用户。') : null,
       check.error ? h('div', { style: { marginTop: 4, fontSize: 11, color: '#b91c1c' } }, check.error) : null,
       h('div', { style: { display: 'flex', gap: 6, flexWrap: 'wrap', marginTop: 6 } },
@@ -476,6 +477,8 @@ window.__ModuleLoader__.load({
             ? { user: selectedCheck.user, home: selectedCheck.home, node: selectedCheck.node?.path }
             : null)
           const selectedWorking = busy.endsWith(':' + selectedName)
+          const nodeReady = Boolean(selectedHello?.node)
+          const nodeMissing = Boolean(selectedCheck && !selectedCheck.node?.path)
 
           const tab = (name) => {
             const active = name === selectedName
@@ -584,14 +587,27 @@ window.__ModuleLoader__.load({
               onClick: () => act(selectedState === 'detached' || selectedState === 'error' ? 'connect' : 'disconnect', selectedName),
               style: btn,
             }, selectedWorking ? '…' : (selectedState === 'detached' || selectedState === 'error' ? '连接' : '断开'))),
+          h('div', { style: { display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginTop: 10, fontSize: 12 } },
+            dot(nodeReady ? 'ready' : nodeMissing ? 'error' : 'starting'),
+            h('span', { style: { color: nodeReady ? muted : nodeMissing ? '#b45309' : muted } },
+              nodeReady ? 'Linux Node ready' : nodeMissing ? 'Linux Node 缺失' : 'Linux Node 未检查'),
+            nodeMissing ? h('button', {
+              type: 'button', disabled: doctorBusy,
+              onClick: () => fix(selectedName, 'node'), style: btn,
+            }, doctorBusy ? '…' : '安装 Node') : null,
+            h('span', { style: { flex: 1 } }),
+            h('button', {
+              type: 'button', disabled: doctorBusy,
+              onClick: runDoctor, style: btn,
+            }, doctorBusy ? '检查中…' : doctor ? '重新检查' : '检查环境')),
           h('div', { style: { marginTop: 8, fontSize: 12, color: muted, lineHeight: 1.8 } },
             h('div', null, selectedHello ? `${selectedHello.user}@${selectedHello.home}` : '未连接'),
-            h('div', null, 'node: ', selectedHello?.node || '—'),
+            h('div', null, 'node: ', h('span', { style: { color: nodeReady ? muted : '#b45309' } }, selectedHello?.node || '未检测')),
             h('div', null, '引用计数: ', String(selectedBroker?.refcount ?? 0))),
           selectedBroker?.lastError ? h('div', {
             style: { marginTop: 6, fontSize: 11, lineHeight: 1.5, color: '#b91c1c', wordBreak: 'break-word' },
           }, selectedBroker.lastError) : null,
-          !doctor ? h('div', { style: { marginTop: 8, fontSize: 11, color: muted } }, '点击“运行诊断”查看 Node / SSH / PATH / 网络。') : null) : null,
+          !doctor ? h('div', { style: { marginTop: 8, fontSize: 11, color: muted } }, '点“检查环境”查看 Node / SSH / PATH / 网络；不会自动诊断。') : null) : null,
 
           h('div', { style: { marginTop: 18, paddingTop: 14, borderTop: `1px solid ${line}` } },
             h('label', { style: { display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: muted } },

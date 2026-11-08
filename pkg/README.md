@@ -1,8 +1,28 @@
 # @chronosun/dsh-wsl
 
+**WSL World for DeepSeek Harness — a complete execution environment, not a `wsl_*` tool set.**
+
 Run a DeepSeek Harness session inside a local WSL distribution: `bash`,
 background jobs, the sidebar terminal, `read`/`write`/`edit`, `grep` and `glob`
 all operate on the Linux filesystem — not on a `\\wsl.localhost` share.
+
+The difference is architectural: the Agent does not choose between Windows and
+Linux tools. The whole session world is Linux: its cwd, its PATH, its `@`
+discovery, its search, its diffs and its worktree tools. There is no
+`wsl-read`/`wsl-grep`/`wsl-path` to select, and no Windows binary hiding in
+`PATH`.
+
+## Choose this if
+
+- your project lives in WSL, not on `/mnt/c`, and you want fast ext4 I/O;
+- you want one session to stay in Linux for hours, not per-command `wsl.exe`;
+- you care about native Linux `@` references, search, diffs and worktrees;
+- you want the Agent to see `/home/...`, not `\\wsl.localhost\...`;
+- you can install a Linux `node` in the distribution (the panel can do it).
+
+Choose a `wsl_*` tool plugin instead if you only need to run an occasional
+Linux command from a Windows session. Those tools are useful; this is a
+different product.
 
 ## What it gives you
 
@@ -67,6 +87,23 @@ persistent `cd`).
 It is deliberately not a host-preset rewrite and not a `wsl_*` tool set: the
 world is declared as its own preset, so the model never chooses between Windows
 and Linux tools, and upgrades do not depend on the text of a shipped preset.
+
+## Compared with `wsl_*` tool plugins
+
+| | `dsh-wsl-tool` style | this plugin |
+|---|---|---|
+| Unit of change | ten tools added to any session | the whole session world |
+| Model cwd | Windows cwd, explicit `workdir` per call | Linux cwd for the session |
+| `@`, search, diffs | host/9P, plus tool-specific substitutes | Linux-native |
+| PATH | Windows PATH can leak in; doctor detects it | login PATH minus `/mnt/*` |
+| Per-command cost | fresh `wsl.exe` each call | persistent broker |
+| Terminal | agent-driven `wsl-term` | user sidebar terminal |
+| Setup | one command, any preset | WSL workspace + preset |
+
+The two are complementary in spirit but not usually installed together: if you
+already run a Windows session and only need occasional WSL commands, the tool
+plugin is the lower-friction choice. If the project lives in WSL, this world is
+the lower-friction choice after the one-time workspace setup.
 
 ## Install
 
@@ -143,10 +180,13 @@ used only to run a small helper. Nothing is installed into the distribution.
 
 ## Doctor and settings
 
-The `WSL` panel has **运行诊断**: it checks the WSL version, each distribution's
-user/home, Linux `node`, `git`, `ssh`, SSH keys, `~/.ssh/config`, the login PATH
-and how many `/mnt` entries the plugin has to remove, plus `.wslconfig`
-networking mode and localhost forwarding. Missing pieces offer guided actions:
+The `WSL` panel has a readiness card (**检查环境**) and the full **运行诊断**:
+it checks the WSL version, each distribution's user/home, Linux `node`, `git`,
+`ssh`, SSH keys, `~/.ssh/config`, kernel/systemd/cgroup, docker/GPU availability,
+the login PATH and how many `/mnt` entries the plugin has to remove, plus
+`.wslconfig` networking mode and localhost forwarding. If Linux Node is missing,
+the readiness card offers **安装 Node** directly; the full doctor also offers
+guided actions:
 
 - **安装 Node** — `apt-get install nodejs` as the distro user (uses `sudo -n`;
   refuses without passwordless sudo and prints the command instead);
@@ -157,15 +197,29 @@ networking mode and localhost forwarding. Missing pieces offer guided actions:
   user, creates `chronos` (locked password, home, bash).
 
 Settings store a **default distribution** and a **per-distribution login user**
-in `~/.dsh/remote-wsl-settings.json`. The user field is a dropdown of users
-reported by the doctor; a root distro is automatically moved to its first normal
-user when settings are empty. The terminal, WSL preset and `@` index all use
-that user, so a Session and its terminal run as the same non-root identity.
-Leave it empty only when the distro default is already the intended user.
+in `~/.dsh/remote-wsl-settings.json`. The user is normally derived from the
+workspace path (`/home/<user>/...` or `/root`), so the panel does not ask again
+when you add a workspace; the doctor reports the users it finds and a root
+distro is automatically moved to its first normal user when settings are empty.
+The terminal, WSL preset and `@` index all use that user, so a Session and its
+terminal run as the same non-root identity.
 
 The panel and plugin icon are a penguin outline (white body, current-color
-outline, no blue tile); the display title is `WSL` and the package id is
-`@chronosun/dsh-wsl`.
+outline, no blue tile); the sidebar title is `WSL` and the market title is
+`WSL World`, package id `@chronosun/dsh-wsl`.
+
+## Security boundary
+
+- Commands and file writes run as the configured Linux user inside the
+  distribution. This plugin does not provide a root mode.
+- The broker is a local child process; the plugin does not send telemetry or
+  make network requests of its own.
+- A workspace grants the Agent the same access that user has in the
+  distribution. Use a normal user, review the doctor, and keep secrets out of
+  paths the Agent can read.
+- The Host still keeps the durable session cwd as a UNC path for its own
+  file-tree/diff features; model-visible paths are Linux. This is a
+  compatibility bridge, not a security boundary.
 
 ## Compatibility
 
@@ -229,6 +283,18 @@ Settings section.
 - **`syntax error near unexpected token '('`** — `wsl.exe` pre-expands `$VAR`
   in its command line against the dirty target environment; commands are
   base64-encoded to avoid it. Quote variables in commands you write yourself.
+
+## Market and feedback
+
+DSH has no official central index. Add this source in **Plugins → Discover**:
+
+```text
+https://chronossun.github.io/dsh-wsl/index.json
+```
+
+Source, issues and the market index live at
+<https://github.com/ChronosSun/dsh-wsl>. Please include the DSH version, WSL
+version and the Doctor output when reporting a failure.
 
 Set `DSH_WSL_DEBUG=1` to append provider traces to
 `wsl-world.log` beside this package's source.

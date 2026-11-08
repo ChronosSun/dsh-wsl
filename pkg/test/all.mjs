@@ -4,7 +4,17 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
 const here = dirname(fileURLToPath(import.meta.url))
-const integration = new Set(['fs.test.mjs', 'search.test.mjs', 'worktree.test.mjs', 'wsl-diff.test.mjs'])
+const integration = new Set([
+  'fs.test.mjs',
+  'search.test.mjs',
+  'search-gitignore.test.mjs',
+  'file-refs.test.mjs',
+  'git-diff.test.mjs',
+  'path.test.mjs',
+  'launch.test.mjs',
+  'worktree.test.mjs',
+  'wsl-diff.test.mjs',
+])
 const includeIntegration = process.env.DSH_WSL_INTEGRATION === '1'
 const tests = readdirSync(here)
   .filter((name) => name.endsWith('.test.mjs'))

@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.8.1
+
+- Add hidden `wsl-ptc` and `wsl-minimal` variants. PTC keeps its
+  `tool-executor-ptc` and delegation/schedule groups; Minimal keeps the
+  read_image-only fs surface and uses `wsl_term` as its persistent shell.
+- Map PTC/Minimal WSL workspaces to those variants, and hide them from the
+  Agent-preset roster alongside the other internal WSL variants.
+
 ## 1.8.0
 
 - Make WSL a workspace execution world instead of a separate user-visible mode.

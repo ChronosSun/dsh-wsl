@@ -4,7 +4,7 @@
 // still needs `wsl-standard` / `wsl-cordis` to exist so a WSL session can keep
 // the tool set of the selected global mode, but the roster should show only
 // Standard and Creator.
-const HIDDEN = new Set(['wsl', 'wsl-standard', 'wsl-cordis'])
+const HIDDEN = new Set(['wsl', 'wsl-standard', 'wsl-cordis', 'wsl-ptc', 'wsl-minimal'])
 const ORIGINAL = Symbol.for('cordis.original')
 const PATCHED = Symbol.for('dsh-wsl/preset-roster-filter')
 

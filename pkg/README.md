@@ -36,11 +36,12 @@ different product.
   workspace is registered through the official API, so history, diffs and the
   session list keep working; its title is prefixed with `🐧`.
 - **WSL is a workspace world, not a separate Agent mode.** The Agent-preset
-  roster still shows **Standard** and **Creator**. A session created in a
-  `🐧` WSL workspace maps internally to a hidden `wsl-standard` or
-  `wsl-cordis` variant, keeping that mode's tools while replacing the execution
-  world with WSL. The WSL cards themselves are filtered from the roster, so
-  there is no third "WSL mode" to choose.
+  roster still shows **Standard**, **PTC**, **Minimal** and **Creator**. A
+  session created in a `🐧` WSL workspace maps internally to a hidden
+  `wsl-standard`, `wsl-ptc`, `wsl-minimal` or `wsl-cordis` variant, keeping
+  that mode's tools while replacing the execution world with WSL. The WSL cards
+  themselves are filtered from the roster, so there is no extra "WSL mode" to
+  choose.
 - **Global model and permissions stay global.** The variants do not declare or
   modify model intelligence, permission policy, or default settings; those
   continue to come from the profile's global configuration.
@@ -105,9 +106,9 @@ persistent broker while `bash` keeps DSH's one-shot contract (`workdir`, not a
 persistent `cd`).
 
 It is deliberately not a host-preset rewrite and not a `wsl_*` tool set. The
-world is delivered as hidden WSL variants of the visible Standard/Creator
-modes, so the model never chooses between Windows and Linux tools and no extra
-WSL mode card appears.
+world is delivered as hidden WSL variants of the visible Standard/PTC/Minimal/
+Creator modes, so the model never chooses between Windows and Linux tools and
+no extra WSL mode card appears.
 
 ## Compared with `wsl_*` tool plugins
 
@@ -162,8 +163,8 @@ used only to run a small helper. Nothing is installed into the distribution.
 2. Choose a distribution, browse to a directory, press `使用此目录`.
 3. The workspace opens in the WSL execution world. There is no separate
    `WSL` mode card: a new session maps to the hidden WSL variant of the current
-   global Agent mode (Standard or Creator), so its tools and the global
-   model/permission settings are inherited. In a WSL session the Agent's
+   global Agent mode, so its tools and the global model/permission settings are
+   inherited. In a WSL session the Agent's
    `Current working directory` is the Linux path (the Host still keeps the UNC
    path for its own diff/`@` features). Ask the agent to run
    `pwd; uname -s; echo $PATH` and it should answer `/home/..., Linux` and a

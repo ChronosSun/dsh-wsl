@@ -21,7 +21,15 @@
 export const WSL_PRESET = 'wsl'
 export const WSL_STANDARD_PRESET = 'wsl-standard'
 export const WSL_CORDIS_PRESET = 'wsl-cordis'
-export const WSL_PRESETS = new Set([WSL_PRESET, WSL_STANDARD_PRESET, WSL_CORDIS_PRESET])
+export const WSL_PTC_PRESET = 'wsl-ptc'
+export const WSL_MINIMAL_PRESET = 'wsl-minimal'
+export const WSL_PRESETS = new Set([
+  WSL_PRESET,
+  WSL_STANDARD_PRESET,
+  WSL_CORDIS_PRESET,
+  WSL_PTC_PRESET,
+  WSL_MINIMAL_PRESET,
+])
 
 export function isWslPreset(id) {
   return WSL_PRESETS.has(id)
@@ -95,8 +103,9 @@ export function presetForRequest(ctx, request) {
 
   const base = basePresetId(ctx, request)
   if (base === WSL_CORDIS_PRESET || base === 'cordis') return WSL_CORDIS_PRESET
+  if (base === WSL_PTC_PRESET || base === 'ptc') return WSL_PTC_PRESET
+  if (base === WSL_MINIMAL_PRESET || base === 'minimal') return WSL_MINIMAL_PRESET
   if (base === WSL_STANDARD_PRESET || base === 'standard' || base === WSL_PRESET) return WSL_STANDARD_PRESET
-  if (base === 'minimal' || base === 'ptc') return WSL_STANDARD_PRESET
   return WSL_STANDARD_PRESET
 }
 

@@ -11,6 +11,8 @@ class FakeRegistry {
       { id: 'wsl', name: 'WSL' },
       { id: 'wsl-standard', name: 'Standard' },
       { id: 'wsl-cordis', name: 'Creator' },
+      { id: 'wsl-ptc', name: 'PTC' },
+      { id: 'wsl-minimal', name: 'Minimal' },
     ]
   }
   async remoteExportList() {
@@ -35,6 +37,6 @@ assert.equal(patch.installed, true)
 assert.deepEqual((await raw.list()).map((row) => row.id), ['standard', 'cordis'])
 assert.deepEqual((await raw.remoteExportList()).presets.map((row) => row.id), ['standard', 'cordis'])
 patch.dispose()
-assert.deepEqual((await raw.list()).map((row) => row.id), ['standard', 'cordis', 'wsl', 'wsl-standard', 'wsl-cordis'])
+assert.deepEqual((await raw.list()).map((row) => row.id), ['standard', 'cordis', 'wsl', 'wsl-standard', 'wsl-cordis', 'wsl-ptc', 'wsl-minimal'])
 
 console.log('preset-roster: ok')

@@ -10,6 +10,8 @@ import {
   WSL_PRESET,
   WSL_STANDARD_PRESET,
   WSL_CORDIS_PRESET,
+  WSL_PTC_PRESET,
+  WSL_MINIMAL_PRESET,
 } from '../src/preset-default.mjs'
 
 let failed = 0
@@ -52,6 +54,8 @@ check('WSL workspace', presetForRequest(fakeCtx, { workspaceId: 'wsl' }), WSL_ST
 check('Windows workspace', presetForRequest(fakeCtx, { workspaceId: 'win' }), undefined)
 check('explicit standard maps to WSL standard', presetForRequest(fakeCtx, { workspaceId: 'wsl', agentPreset: 'standard' }), WSL_STANDARD_PRESET)
 check('explicit creator maps to WSL creator', presetForRequest(fakeCtx, { workspaceId: 'wsl', agentPreset: 'cordis' }), WSL_CORDIS_PRESET)
+check('explicit PTC maps to WSL PTC', presetForRequest(fakeCtx, { workspaceId: 'wsl', agentPreset: 'ptc' }), WSL_PTC_PRESET)
+check('explicit minimal maps to WSL minimal', presetForRequest(fakeCtx, { workspaceId: 'wsl', agentPreset: 'minimal' }), WSL_MINIMAL_PRESET)
 check('UNC cwd without workspace', presetForRequest(fakeCtx, { cwd: '\\\\wsl.localhost\\Ubuntu-24.04\\srv\\app' }), WSL_STANDARD_PRESET)
 check('no location', presetForRequest(fakeCtx, {}), undefined)
 check('unknown workspace', workspacePathOf(registry, 'nope'), '')

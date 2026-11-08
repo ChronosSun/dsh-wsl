@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.8.2
+
+- Move PTC's `agent-instructions`, `skill-filesystem` and `tool-skill` inside
+  the WSL world group so they read the Linux tree instead of the Windows host.
+
 ## 1.8.1
 
 - Add hidden `wsl-ptc` and `wsl-minimal` variants. PTC keeps its

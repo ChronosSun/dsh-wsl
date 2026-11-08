@@ -439,10 +439,6 @@
         name: '@deepseek-ai/dsh-persona'
         config:
           prefix: You are a coding agent powered by the {{model}} model.
-      - id: agent-instructions
-        name: '@deepseek-ai/dsh-agent-instructions'
-        config:
-          maxBytes: 65536
       - id: time-context
         name: '@deepseek-ai/dsh-time-context'
       - id: wsl-world
@@ -475,14 +471,18 @@
         - &id004
           id: tool-term-wsl
           name: '@chronosun/dsh-wsl/terminal'
+        - id: agent-instructions
+          name: '@deepseek-ai/dsh-agent-instructions'
+          config:
+            maxBytes: 65536
+        - id: skill-filesystem
+          name: '@deepseek-ai/dsh-skill-filesystem'
+        - id: tool-skill
+          name: '@deepseek-ai/dsh-tool-skill'
       - id: tool-jobs
         name: '@deepseek-ai/dsh-tool-jobs'
       - id: tool-schedule
         name: '@deepseek-ai/dsh-tool-schedule'
-      - id: skill-filesystem
-        name: '@deepseek-ai/dsh-skill-filesystem'
-      - id: tool-skill
-        name: '@deepseek-ai/dsh-tool-skill'
       - id: command-goal
         name: '@deepseek-ai/dsh-command-goal'
       - id: tool-goal

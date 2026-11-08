@@ -32,7 +32,7 @@ Any HTTPS static host works; `index.json` and `icon.svg` must stay together.
 The index points at the npm version:
 
 ```text
-@chronosun/dsh-wsl@1.8.1
+@chronosun/dsh-wsl@1.8.2
 ```
 
 ## Update a release

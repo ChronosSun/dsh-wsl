@@ -1,0 +1,81 @@
+{
+  "format": 1,
+  "title": {
+    "en": "Chronosun DSH plugins",
+    "zh": "Chronosun DSH 插件"
+  },
+  "description": {
+    "en": "A small index for @chronosun DSH bundles.",
+    "zh": "@chronosun 的 DSH 组合包索引。"
+  },
+  "metadata": {
+    "categories": {
+      "wsl": {
+        "title": {
+          "en": "WSL",
+          "zh": "WSL"
+        }
+      }
+    },
+    "labels": {
+      "linux": {
+        "title": {
+          "en": "Linux",
+          "zh": "Linux"
+        }
+      },
+      "wsl2": {
+        "title": {
+          "en": "WSL 2",
+          "zh": "WSL 2"
+        }
+      }
+    }
+  },
+  "plugins": [
+    {
+      "name": "@chronosun/dsh-wsl",
+      "title": {
+        "en": "WSL",
+        "zh": "WSL"
+      },
+      "description": {
+        "en": "Run a DeepSeek Harness session inside a local WSL distribution: Linux tools and paths, a clean login PATH, WSL-native search and @ references, diagnostics, and a WSL workspace picker.",
+        "zh": "让 DeepSeek Harness 会话在本地 WSL 发行版里运行：Linux 工具与路径、干净的登录 PATH、WSL 原生搜索与 @ 引用、诊断面板，以及 WSL 工作区选择器。"
+      },
+      "icon": "icon.svg",
+      "author": "chronosun",
+      "homepage": "https://github.com/chronosun/dsh-plugin#readme",
+      "repository": {
+        "url": "https://github.com/chronosun/dsh-plugin",
+        "directory": "pkg"
+      },
+      "metadata": {
+        "category": "wsl",
+        "keywords": [
+          "wsl",
+          "wsl2",
+          "linux",
+          "dsh-plugin",
+          "deepseek-harness"
+        ],
+        "labels": [
+          "linux",
+          "wsl2"
+        ]
+      },
+      "versions": [
+        {
+          "version": "1.5.1",
+          "publishTimestamp": 1794120245,
+          "source": {
+            "type": "npm"
+          },
+          "engines": {
+            "dsh": "^0.2.2-rc.1"
+          }
+        }
+      ]
+    }
+  ]
+}

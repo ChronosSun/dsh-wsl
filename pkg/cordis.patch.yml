@@ -1,0 +1,79 @@
+# dsh-wsl — M1a slice:
+# 1) a row named after the package: the panel's host routes + the client half;
+# 2) the WSL preset (bash/terminal/jobs run inside a local WSL distribution);
+# 3) a diagnostic preset with no world, to tell a declaration problem from a
+#    world-activation problem.
+- insert:
+    - id: dsh-wsl
+      name: '@chronosun/dsh-wsl'
+    - id: preset-wsl
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: wsl
+        name: WSL
+        description: Linux execution world inside a local WSL distribution.
+        order: 5
+        plugins:
+          - id: persona
+            name: '@deepseek-ai/dsh-persona'
+            config:
+              prefix: You are a coding agent powered by the {{model}} model.
+          - id: time-context
+            name: '@deepseek-ai/dsh-time-context'
+          - id: wsl-world
+            name: cordis:group
+            group: true
+            isolate:
+              subprocess: true
+              shell: true
+              fs: true
+            config:
+              - id: wsl-subprocess
+                name: '@chronosun/dsh-wsl/world'
+              - id: fs-wsl
+                name: '@chronosun/dsh-wsl/fs'
+              - id: bash-local
+                name: '@deepseek-ai/dsh-bash-local'
+              - id: tool-bash
+                name: '@deepseek-ai/dsh-tool-bash'
+              - id: tool-fs
+                name: '@deepseek-ai/dsh-tool-fs'
+                config:
+                  applyPatch: true
+              - id: search-tools
+                name: '@chronosun/dsh-wsl/search'
+              - id: wsl-prompt
+                name: '@chronosun/dsh-wsl/prompt'
+              - id: agent-instructions
+                name: '@deepseek-ai/dsh-agent-instructions'
+                config:
+                  maxBytes: 65536
+              - id: skill-filesystem
+                name: '@deepseek-ai/dsh-skill-filesystem'
+                config:
+                  # The WSL filesystem exposes no watcher, so the catalog is
+                  # collected once instead of being invalidated live.
+                  watch: false
+              - id: tool-skill
+                name: '@deepseek-ai/dsh-tool-skill'
+              - id: tool-todo
+                name: '@deepseek-ai/dsh-tool-todo'
+                config:
+                  allowParallelInProgress: true
+              - id: tool-ask-user
+                name: '@deepseek-ai/dsh-tool-ask-user'
+              - id: tool-web
+                name: '@deepseek-ai/dsh-tool-web'
+                config:
+                  fetch: true
+                  searchTimeoutMs: 60000
+              - id: present
+                name: '@deepseek-ai/dsh-tool-present'
+              - id: command-goal
+                name: '@deepseek-ai/dsh-command-goal'
+              - id: tool-goal
+                name: '@deepseek-ai/dsh-tool-goal'
+              - id: tool-worktree-wsl
+                name: '@chronosun/dsh-wsl/worktree'
+          - id: tool-jobs
+            name: '@deepseek-ai/dsh-tool-jobs'

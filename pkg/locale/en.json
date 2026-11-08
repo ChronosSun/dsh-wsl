@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "WSL",
+    "description": "Run a DeepSeek Harness session inside a local WSL distribution: Linux tools, Linux paths, a clean login PATH, WSL-native search and @ references, and a doctor for Node, SSH and networking."
+  }
+}

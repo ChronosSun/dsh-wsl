@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "WSL",
+    "description": "让 DeepSeek Harness 会话在本地 WSL 发行版里运行：Linux 工具与路径、干净的登录 PATH、WSL 原生搜索与 @ 引用，以及 Node/SSH/网络的诊断面板。"
+  }
+}

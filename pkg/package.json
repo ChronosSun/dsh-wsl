@@ -1,0 +1,97 @@
+{
+  "name": "@chronosun/dsh-wsl",
+  "version": "1.5.2",
+  "type": "module",
+  "description": "WSL execution world for DeepSeek Harness: a Linux bash/terminal/fs world inside a local WSL distribution, plus a connection panel, Doctor, and a WSL workspace picker.",
+  "license": "MIT",
+  "homepage": "https://github.com/chronosun/dsh-plugin#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chronosun/dsh-plugin.git",
+    "directory": "pkg"
+  },
+  "bugs": {
+    "url": "https://github.com/chronosun/dsh-plugin/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "wsl",
+    "wsl2",
+    "linux",
+    "agent",
+    "coding-agent"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./host": "./host.js",
+    "./world": "./world.js",
+    "./fs": "./fs-service.mjs",
+    "./search": "./search-tools.mjs",
+    "./prompt": "./prompt.mjs",
+    "./terminal-launcher": "./terminal-launcher.mjs",
+    "./worktree": "./worktree-tool-v2.mjs",
+    "./client": "./client.js",
+    "./icon": "./icon.svg",
+    "./locale/*.json": "./locale/*.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "host.js",
+    "world.js",
+    "fs-service.mjs",
+    "search-tools.mjs",
+    "prompt.mjs",
+    "terminal-launcher.mjs",
+    "worktree-tool-v2.mjs",
+    "client.js",
+    "README.md",
+    "LICENSE",
+    "cordis.patch.yml",
+    "icon.svg",
+    "locale/*.json",
+    "src/"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-sidebar"
+      ]
+    },
+    "compatibility": {
+      "dshReleases": {
+        "0.2.2-rc.1": "compatible"
+      }
+    }
+  },
+  "engines": {
+    "dsh": ">=0.2.2-rc.1"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "*",
+    "@deepseek-ai/dsh-subprocess": "*"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/cordis": {
+      "optional": true
+    },
+    "@deepseek-ai/dsh-subprocess": {
+      "optional": true
+    }
+  }
+}

@@ -247,5 +247,21 @@ export async function runFix(distro, action, requestedUser, requestedName = '') 
     const result = await bashScript(distro, createAs, script, { timeoutMs: 60_000 })
     return { action, distro, user: createAs || 'root', name, code: result.code, out: result.out, err: result.err }
   }
+  if (action === 'python' || action === 'build' || action === 'tools') {
+    const packages = action === 'python'
+      ? 'python3 python3-pip python3-venv'
+      : action === 'build'
+        ? 'build-essential'
+        : 'ca-certificates curl git jq rsync'
+    const installUser = requestedUser || ''
+    const script = [
+      'if ! command -v apt-get >/dev/null 2>&1; then echo "NO_APT"; exit 2; fi',
+      'if [ "$(id -u)" = 0 ]; then SUDO=""; else if ! sudo -n true 2>/dev/null; then echo "NO_SUDO"; exit 3; fi; SUDO="sudo -n"; fi',
+      '$SUDO apt-get update -qq && DEBIAN_FRONTEND=noninteractive $SUDO apt-get install -y -qq ' + packages,
+      'for t in ' + (action === 'python' ? 'python3 pip3' : action === 'build' ? 'gcc make' : 'curl git jq rsync') + '; do command -v "$t" || true; done',
+    ].join('\n')
+    const result = await bashScript(distro, installUser, script, { timeoutMs: 300_000 })
+    return { action, distro, user: installUser, code: result.code, out: result.out, err: result.err }
+  }
   throw Object.assign(new Error(`unknown doctor action: ${action}`), { code: 'DOCTOR_UNKNOWN_ACTION' })
 }

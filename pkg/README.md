@@ -74,6 +74,9 @@ different product.
   `package.json`, lockfiles, `.nvmrc`, `Cargo.toml`, `go.mod`, `pyproject.toml`,
   `requirements.txt`, `Dockerfile`, `Makefile` and `CMakeLists.txt`, then lists
   the tools they need and what is missing in the distribution.
+- **Dry-run bootstrap.** `wsl_bootstrap` plans (and only with `dryRun: false`
+  installs) `node`, `python`, `build` or `tools` recipes as root inside the
+  distribution. It never installs silently.
 
 ## Why this instead of opening the UNC path
 

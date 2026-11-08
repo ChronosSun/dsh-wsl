@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.6.1
+
+- Add `wsl_bootstrap`: dry-run-first recipes for Node, Python, build tools and
+  common CLI tools; `dryRun: false` installs as root inside the distribution.
+- Extend guided doctor fixes with Python/build/tools apt recipes.
+
 ## 1.6.0
 
 - Add `wsl_path`: read-only Linux ↔ Windows path conversion, including

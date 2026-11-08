@@ -104,12 +104,15 @@ async function run(entry, command, timeoutMs) {
 export function apply(ctx) {
   const tool = {
     name: 'wsl_term',
-    description: 'Persistent real PTY shell in the WSL world. `run` executes a command in the same shell (cwd/env/background work persist), `read` returns buffered output, `interrupt` sends SIGINT to the foreground process, `close` ends the shell. Full-screen interactive input is not exposed yet.',
+    description: 'Persistent real PTY shell in the WSL world. `run` executes a command in the same shell (cwd/env/background work persist), `read` returns buffered output, `input` writes raw keystrokes (for TUI/REPL), `resize` changes the PTY size, `interrupt` sends SIGINT to the foreground process, `close` ends the shell.',
     parameters: {
       type: 'object',
       properties: {
-        action: { type: 'string', enum: ['run', 'read', 'interrupt', 'close', 'list'] },
+        action: { type: 'string', enum: ['run', 'read', 'input', 'resize', 'interrupt', 'close', 'list'] },
         command: { type: 'string', description: 'Command for action=run.' },
+        data: { type: 'string', description: 'Raw bytes/keystrokes for action=input.' },
+        cols: { type: 'number', description: 'Columns for action=resize.' },
+        rows: { type: 'number', description: 'Rows for action=resize.' },
         timeoutMs: { type: 'number', description: 'Run timeout; defaults to 120000 and is capped at 600000.' },
       },
       required: ['action'],
@@ -144,6 +147,18 @@ export function apply(ctx) {
       }
       const entry = await ensureTerminal(ctx, exec)
       if (action === 'read') return { action, output: stripAnsi(entry.buffer).slice(-16_384), closed: entry.closed }
+      if (action === 'input') {
+        if (typeof args?.data !== 'string') throw new Error('wsl_term: data is required for action=input')
+        await entry.handle.write(args.data)
+        await new Promise((resolve) => setTimeout(resolve, 50))
+        return { action, output: stripAnsi(entry.buffer).slice(-16_384), closed: entry.closed }
+      }
+      if (action === 'resize') {
+        const cols = Math.max(1, Math.min(500, Number(args?.cols) || 80))
+        const rows = Math.max(1, Math.min(500, Number(args?.rows) || 24))
+        await entry.handle.resize(cols, rows)
+        return { action, output: `resized to ${cols}x${rows}`, closed: entry.closed }
+      }
       if (action === 'interrupt') {
         const pid = await entry.handle.signalForeground('SIGINT').catch(() => 0)
         return { action, output: pid ? `SIGINT sent to ${pid}` : 'no foreground process', closed: entry.closed }

@@ -81,8 +81,8 @@ different product.
 - **Persistent PTY shell for the Agent.** `wsl_term` keeps one real terminal
   shell per Agent session: `run` executes in the same shell (`cd`, exported
   variables and background work persist), `read` returns buffered output,
-  `interrupt` sends SIGINT, and `close` ends it. Raw keystrokes/full-screen TUI
-  input are not exposed yet.
+  `input` writes raw keystrokes for TUI/REPL programs, `resize` changes the PTY
+  size, `interrupt` sends SIGINT, and `close` ends it.
 
 ## Why this instead of opening the UNC path
 

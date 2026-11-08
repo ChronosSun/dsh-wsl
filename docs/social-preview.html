@@ -1,0 +1,54 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box}
+body{margin:0;width:1280px;height:640px;overflow:hidden;background:
+radial-gradient(900px 500px at 12% -10%,#16345a 0%,transparent 60%),
+radial-gradient(700px 420px at 100% 110%,#0d3a2b 0%,transparent 55%),
+#080d17;color:#e7edf6;font-family:'Segoe UI',system-ui,sans-serif}
+.wrap{padding:54px 62px;height:100%;display:flex;flex-direction:column}
+.brand{display:flex;align-items:center;gap:12px;color:#8ea4c4;font-size:16px;letter-spacing:.08em;text-transform:uppercase}
+.brand b{color:#dbe7f8;letter-spacing:.02em}
+h1{margin:34px 0 10px;font-size:66px;line-height:1.02;letter-spacing:-.03em}
+h1 span{color:#5aa9ff}
+.sub{font-size:22px;color:#a9b8ce;margin:0 0 24px}
+.grid{display:grid;grid-template-columns:1.05fr 1fr;gap:34px;align-items:start}
+ul{list-style:none;padding:0;margin:0;display:grid;gap:13px}
+li{font-size:18px;color:#c7d5e8;display:flex;gap:10px;align-items:flex-start}
+li:before{content:"›";color:#4ade80;font-weight:700}
+.card{background:#0c1422;border:1px solid #25344c;border-radius:14px;padding:20px 22px;box-shadow:0 24px 70px rgba(0,0,0,.35)}
+.dots{display:flex;gap:6px;margin-bottom:14px}
+.dots i{width:10px;height:10px;border-radius:50%;background:#31415c;display:block}
+.term{font-family:Consolas,'Cascadia Mono',monospace;font-size:15px;line-height:1.75;color:#b9c8dd;white-space:pre-wrap}
+.term .p{color:#4ade80}
+.term .k{color:#7dd3fc}
+.term .m{color:#fbbf24}
+.foot{margin-top:auto;display:flex;align-items:center;gap:20px;font-size:15px;color:#8ea4c4}
+.pill{background:#122033;border:1px solid #2b3d58;border-radius:999px;padding:7px 13px;color:#bcd0ea}
+.accent{color:#5aa9ff}
+</style></head><body><div class="wrap">
+<div class="brand">DeepSeek Harness <b>·</b> plugin</div>
+<h1>WSL <span>World</span></h1>
+<p class="sub">The whole session runs in WSL. Not a <code>wsl_*</code> tool set.</p>
+<div class="grid">
+  <div>
+    <ul>
+      <li>Linux cwd, Linux bash, Linux Node — the model never picks a side</li>
+      <li>clean login PATH, no <code>/mnt/*</code> or Windows binaries</li>
+      <li>native <code>@</code>, search, diffs, worktrees</li>
+      <li>persistent broker + real PTY terminal</li>
+      <li>readiness card, project check, dry-run bootstrap</li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="dots"><i></i><i></i><i></i></div>
+    <div class="term"><span class="p">chronos@wsl</span>:<span class="k">~/project</span>$ pwd
+/home/chronos/project
+<span class="p">chronos@wsl</span>:<span class="k">~/project</span>$ uname -s
+Linux
+<span class="p">chronos@wsl</span>:<span class="k">~/project</span>$ echo $PATH
+/usr/local/bin:/usr/bin:/bin
+<span class="m">no /mnt/c. no wsl.exe per file read.</span></div>
+  </div>
+</div>
+<div class="foot"><span class="pill">@chronosun/dsh-wsl</span><span>npm</span><span class="accent">chronossun.github.io/dsh-wsl</span><span style="margin-left:auto">MIT</span></div>
+</div></body></html>

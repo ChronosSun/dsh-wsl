@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.7.3
+
+- `wsl_term` now supports raw `input` and `resize`, so TUI/REPL programs can be
+  driven through the persistent PTY.
+- Document the corrected client bundle registration id and the 1.7.2 recovery.
+
 ## 1.7.2
 
 - Fix the client bundle registration id: it must be the package name

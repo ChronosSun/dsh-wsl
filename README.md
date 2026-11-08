@@ -4,6 +4,8 @@
 [![CI](https://github.com/ChronosSun/dsh-wsl/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/ChronosSun/dsh-wsl/actions/workflows/ci.yml)
 [![license](https://img.shields.io/npm/l/@chronosun/dsh-wsl)](https://github.com/ChronosSun/dsh-wsl/blob/master/LICENSE)
 
+![WSL World for DSH](docs/social-preview.png)
+
 **`dsh-wsl` is a complete WSL execution world for DeepSeek Harness, not a
 `wsl_*` tool set.** One DSH session runs its bash, filesystem tools, terminal,
 search and `@` references inside a local WSL distribution — Linux paths, Linux

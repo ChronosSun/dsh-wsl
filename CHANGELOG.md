@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.7.4
+
+- Fix `glob`/`grep` file enumeration to prune `node_modules` even when the
+  distribution has ripgrep (the `rg --files` path previously included it).
+- Add a client bundle/packaging contract test and a release check; CI now runs
+  all pure tests plus the release gate. WSL integration tests are opt-in with
+  `DSH_WSL_INTEGRATION=1`.
+
 ## 1.7.3
 
 - `wsl_term` now supports raw `input` and `resize`, so TUI/REPL programs can be

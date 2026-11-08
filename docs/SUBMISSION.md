@@ -13,7 +13,7 @@ community directory.
 ```json
 {
   "name": "@chronosun/dsh-wsl",
-  "version": "1.7.3",
+  "version": "1.7.4",
   "repository": "https://github.com/ChronosSun/dsh-wsl",
   "directory": "pkg",
   "homepage": "https://github.com/ChronosSun/dsh-wsl#readme",
@@ -58,7 +58,7 @@ gh repo edit ChronosSun/dsh-wsl \
 ## PR / issue text
 
 ```text
-Add @chronosun/dsh-wsl 1.7.3 to the WSL category.
+Add @chronosun/dsh-wsl 1.7.4 to the WSL category.
 
 npm: https://www.npmjs.com/package/@chronosun/dsh-wsl
 repo: https://github.com/ChronosSun/dsh-wsl

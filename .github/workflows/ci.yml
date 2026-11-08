@@ -16,6 +16,6 @@ jobs:
         with:
           node-version: 22
       - name: Pure unit tests (no WSL required)
-        run: |
-          node test/preset-default.test.mjs
-          node test/changes-paths.test.mjs
+        run: npm test
+      - name: Release contract
+        run: npm run check

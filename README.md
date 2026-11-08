@@ -60,7 +60,14 @@ npm pack
 Submission copy for third-party indexes: [`docs/SUBMISSION.md`](docs/SUBMISSION.md).
 
 The package tests are under [`pkg/test/`](pkg/test/). GitHub Actions runs the
-pure unit tests; WSL integration tests require Windows + WSL.
+pure unit tests and the release contract; WSL integration tests are opt-in:
+
+```bash
+cd pkg
+npm test
+DSH_WSL_INTEGRATION=1 npm test
+npm run check
+```
 
 ## License
 

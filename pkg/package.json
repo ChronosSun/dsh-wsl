@@ -1,8 +1,12 @@
 {
   "name": "@chronosun/dsh-wsl",
-  "version": "1.7.3",
+  "version": "1.7.4",
   "type": "module",
   "description": "WSL World for DeepSeek Harness: the whole session runs in a local WSL distribution with Linux paths, clean PATH, native @/search/diffs/worktrees, plus a connection panel and project doctor. Not a wsl_* tool set.",
+  "scripts": {
+    "test": "node test/all.mjs",
+    "check": "node ../tools/check-release.mjs"
+  },
   "license": "MIT",
   "homepage": "https://github.com/ChronosSun/dsh-wsl#readme",
   "repository": {

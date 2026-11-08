@@ -250,6 +250,20 @@ outline, no blue tile); the sidebar title is `WSL` and the market title is
   file-tree/diff features; model-visible paths are Linux. This is a
   compatibility bridge, not a security boundary.
 
+## Development
+
+From `pkg/`:
+
+```bash
+npm test                      # pure unit tests (no WSL required)
+DSH_WSL_INTEGRATION=1 npm test # + real WSL broker tests
+npm run check                 # release contract: client id, exports, market
+```
+
+`npm run check` fails if the client bundle id differs from the package name
+(the 1.7.1 boot-crash class), if a Cordis subpath is not exported, or if the
+market entry version disagrees with `package.json`.
+
 ## Compatibility
 
 | DSH | Status |

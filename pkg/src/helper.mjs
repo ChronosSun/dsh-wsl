@@ -110,6 +110,7 @@ async function listFiles(root) {
     const { stdout } = await execFileAsync('rg', [
       '--files', '--hidden', '-0',
       '--glob', '!.git', '--glob', '!.git/**',
+      '--glob', '!node_modules', '--glob', '!node_modules/**',
     ], { cwd: root, maxBuffer: 64 * 1024 * 1024 })
     return stdout.split('\0').filter(Boolean).map((rel) => path.join(root, rel))
   } catch {

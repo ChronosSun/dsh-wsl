@@ -8,6 +8,7 @@ distribution — Linux paths, Linux tools, no Windows/9P indirection.
 - plugin-market index: `https://chronossun.github.io/dsh-wsl/index.json`
 - package source: [`pkg/`](pkg/)
 - market index source: [`market/`](market/)
+- Package on npm: https://www.npmjs.com/package/dsh-wsl
 
 ## Install
 
@@ -21,6 +22,8 @@ sidebar; create a workspace from a directory inside a distribution.
 Requirements: Windows, WSL 2, and a Linux Node.js in the distribution (the
 doctor can install it), plus an optional non-root user. The plugin does not
 install anything into the distribution by default.
+
+Search for `dsh-wsl` and install
 
 ## Market
 

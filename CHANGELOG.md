@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.7.1
+
+- Fix `wsl_term`'s output schema (use a single number type for `exitCode`) so
+  the tool cannot be rejected by schema validation; report `-1` when no exit
+  code was observed.
+- Document the Windows-CWD requirement for `dsh plugin` and the old
+  `terminal-controller` patch migration.
+
 ## 1.7.0
 
 - Add `wsl_term`: a persistent real PTY shell per Agent session

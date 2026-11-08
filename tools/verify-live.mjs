@@ -48,7 +48,7 @@ async function main() {
   }
 
   const state = await json('/dsh-wsl/state')
-  check('profile/host version 1.7.0', state.version === '1.7.0', `live=${state.version}`)
+  check('profile/host version 1.7.1', state.version === '1.7.1', `live=${state.version}`)
   check('wsl diff companion installed', state.wslDiff?.installed === true)
   check('all host capabilities present', Object.values(state.capabilities ?? {}).every(Boolean),
     Object.entries(state.capabilities ?? {}).filter(([, ok]) => !ok).map(([name]) => name).join(',') || '')

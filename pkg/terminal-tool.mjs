@@ -4,7 +4,6 @@
 // allocates a real tty and bash inherits it. One shell is kept per Agent
 // session, so `cd`, exported variables and background work survive calls.
 // This intentionally exposes run/read/interrupt/close, not raw keystrokes.
-import { isAbsolute } from 'node:path'
 
 export const name = 'dsh-wsl/terminal'
 export const inject = ['tools']
@@ -96,7 +95,7 @@ async function run(entry, command, timeoutMs) {
   }
   return {
     output: output.trimEnd(),
-    exitCode,
+    exitCode: exitCode ?? -1,
     timedOut: endAt < 0,
     closed: entry.closed,
   }
@@ -122,7 +121,7 @@ export function apply(ctx) {
         properties: {
           action: { type: 'string' },
           output: { type: 'string' },
-          exitCode: { type: ['number', 'null'] },
+          exitCode: { type: 'number' },
           timedOut: { type: 'boolean' },
           closed: { type: 'boolean' },
           sessions: { type: 'array', items: { type: 'string' } },

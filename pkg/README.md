@@ -1,5 +1,9 @@
 # @chronosun/dsh-wsl
 
+[![npm](https://img.shields.io/npm/v/@chronosun/dsh-wsl?label=npm)](https://www.npmjs.com/package/@chronosun/dsh-wsl)
+[![CI](https://github.com/ChronosSun/dsh-wsl/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/ChronosSun/dsh-wsl/actions/workflows/ci.yml)
+[![license](https://img.shields.io/npm/l/@chronosun/dsh-wsl)](https://github.com/ChronosSun/dsh-wsl/blob/master/LICENSE)
+
 **WSL World for DeepSeek Harness — a complete execution environment, not a `wsl_*` tool set.**
 
 Run a DeepSeek Harness session inside a local WSL distribution: `bash`,

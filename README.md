@@ -1,5 +1,9 @@
 # WSL World for DSH
 
+[![npm](https://img.shields.io/npm/v/@chronosun/dsh-wsl?label=npm)](https://www.npmjs.com/package/@chronosun/dsh-wsl)
+[![CI](https://github.com/ChronosSun/dsh-wsl/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/ChronosSun/dsh-wsl/actions/workflows/ci.yml)
+[![license](https://img.shields.io/npm/l/@chronosun/dsh-wsl)](https://github.com/ChronosSun/dsh-wsl/blob/master/LICENSE)
+
 **`dsh-wsl` is a complete WSL execution world for DeepSeek Harness, not a
 `wsl_*` tool set.** One DSH session runs its bash, filesystem tools, terminal,
 search and `@` references inside a local WSL distribution — Linux paths, Linux
@@ -9,7 +13,6 @@ tools, no Windows/9P indirection.
 - plugin-market index: `https://chronossun.github.io/dsh-wsl/index.json`
 - package source: [`pkg/`](pkg/)
 - market index source: [`market/`](market/)
-- Package on npm: https://www.npmjs.com/package/dsh-wsl
 
 ## Choose this if
 
@@ -34,8 +37,6 @@ sidebar; create a workspace from a directory inside a distribution.
 Requirements: Windows, WSL 2, and a Linux Node.js in the distribution (the
 doctor can install it), plus an optional non-root user. The plugin does not
 install anything into the distribution by default.
-
-Search for `dsh-wsl` and install
 
 ## Market
 

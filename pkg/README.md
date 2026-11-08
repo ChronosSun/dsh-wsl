@@ -13,8 +13,9 @@ all operate on the Linux filesystem — not on a `\\wsl.localhost` share.
 The difference is architectural: the Agent does not choose between Windows and
 Linux tools. The whole session world is Linux: its cwd, its PATH, its `@`
 discovery, its search, its diffs and its worktree tools. There is no
-`wsl-read`/`wsl-grep`/`wsl-path` to select, and no Windows binary hiding in
-`PATH`.
+`wsl-read`/`wsl-grep` tool to select, and no Windows binary hiding in `PATH`.
+`wsl_path` is a narrow boundary helper for the few times a path must cross to
+Windows; it does not execute anything.
 
 ## Choose this if
 
